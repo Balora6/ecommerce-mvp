@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Shop {
+  id          String   @id @default(cuid())
+  shopDomain  String   @unique @map("shop_domain")
+  accessToken String   @map("access_token")
+  apiScope    String   @map("api_scope")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  auditLogs AuditLog[]
+
+  @@map("shops")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actor     String
+  action    String
+  shopId    String?  @map("shop_id")
+  meta      Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  shop Shop? @relation(fields: [shopId], references: [id])
+
+  @@map("audit_logs")
+}
