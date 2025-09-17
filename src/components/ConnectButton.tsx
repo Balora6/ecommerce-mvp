@@ -9,7 +9,7 @@ type ConnectButtonProps = {
 export function ConnectButton({ onConnect }: ConnectButtonProps) {
   const handleConnect = () => {
     if (onConnect) onConnect();
-    window.location.href = "/api/shopify/oauth/start";
+    window.location.href = "/api/auth/shopify?shop=brokeragetets.myshopify.com";
   };
 
   return (
