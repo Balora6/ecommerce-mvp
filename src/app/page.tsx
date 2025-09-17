@@ -1,28 +1,15 @@
 "use client";
 
 import { ConnectButton } from "@/components/ConnectButton";
-import MetricsTable from "@/components/MetricsTable";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-
-interface MetricsResponse {
-  shopId: string;
-  from: string;
-  to: string;
-  ordersCount: number;
-  grossRevenue: number;
-  currency: string;
-  avgOrderValue: number;
-  refundedAmount: number;
-  netRevenue: number;
-}
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function HomePage() {
-  const [metrics, setMetrics] = useState<MetricsResponse | null>(null);
   const [shopConnected, setShopConnected] = useState(false);
   const [shopId, setShopId] = useState("");
   const [error, setError] = useState("");
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
     const connected = searchParams.get("connected");
@@ -34,27 +21,12 @@ export default function HomePage() {
       setShopConnected(true);
       if (shopIdParam) {
         setShopId(shopIdParam);
+        router.push(`/metrics?shopId=${shopIdParam}`);
       }
     } else if (errorParam) {
       setError(`OAuth error: ${errorParam}`);
     }
   }, [searchParams]);
-
-  useEffect(() => {
-    if (shopConnected && shopId) {
-      fetch(`/api/shops/${shopId}/metrics`)
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-          }
-          return res.json();
-        })
-        .then((data) => setMetrics(data))
-        .catch((err) => {
-          setError(`Failed to fetch metrics: ${err.message}`);
-        });
-    }
-  }, [shopConnected, shopId]);
 
   return (
     <div
@@ -102,11 +74,9 @@ export default function HomePage() {
             textAlign: "center",
           }}
         >
-          ✅ Successfully connected to Shopify
+          ✅ Successfully connected to Shopify. Redirecting to metrics...
         </div>
       )}
-
-      {metrics && <MetricsTable metrics={metrics} />}
     </div>
   );
 }
