@@ -2,34 +2,88 @@
  * Security utilities for handling sensitive data
  */
 
-export function redactSecrets(text: string): string {
-  const secrets = [
-    process.env.SHOPIFY_APP_SECRET,
-    process.env.SUPABASE_SERVICE_ROLE_KEY,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  ].filter(Boolean);
+/**
+ * Redacts sensitive information from objects for logging
+ * @param obj - Object that may contain sensitive data
+ * @param sensitiveKeys - Array of keys to redact
+ * @returns Object with sensitive values redacted
+ */
+export function redactSecrets(
+  obj: any,
+  sensitiveKeys: string[] = [
+    "access_token",
+    "token",
+    "secret",
+    "password",
+    "key",
+  ]
+): any {
+  if (obj === null || obj === undefined) {
+    return obj;
+  }
 
-  let redacted = text;
-  secrets.forEach((secret) => {
-    if (secret) {
-      redacted = redacted.replace(new RegExp(secret, "g"), "[REDACTED]");
+  if (typeof obj === "string") {
+    return "[REDACTED]";
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map((item) => redactSecrets(item, sensitiveKeys));
+  }
+
+  if (typeof obj === "object") {
+    const redacted: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      const keyLower = key.toLowerCase();
+      const isSensitive = sensitiveKeys.some((sensitiveKey) =>
+        keyLower.includes(sensitiveKey.toLowerCase())
+      );
+
+      redacted[key] = isSensitive
+        ? "[REDACTED]"
+        : redactSecrets(value, sensitiveKeys);
     }
-  });
+    return redacted;
+  }
 
-  redacted = redacted.replace(
-    /access_token["\s]*[:=]["\s]*[a-zA-Z0-9]{20,}/g,
-    "access_token: [REDACTED]"
-  );
-
-  return redacted;
+  return obj;
 }
 
-export function logSecurely(message: string, data?: any) {
-  const redactedMessage = redactSecrets(message);
-  const redactedData = data ? redactSecrets(JSON.stringify(data)) : undefined;
+/**
+ * Safe logger that automatically redacts secrets
+ */
+export const safeLogger = {
+  info: (message: string, data?: any) => {
+    console.log(`[INFO] ${message}`, data ? redactSecrets(data) : "");
+  },
+  error: (message: string, data?: any) => {
+    console.error(`[ERROR] ${message}`, data ? redactSecrets(data) : "");
+  },
+  warn: (message: string, data?: any) => {
+    console.warn(`[WARN] ${message}`, data ? redactSecrets(data) : "");
+  },
+  debug: (message: string, data?: any) => {
+    if (process.env.NODE_ENV === "development") {
+      console.debug(`[DEBUG] ${message}`, data ? redactSecrets(data) : "");
+    }
+  },
+};
 
-  console.log(
-    redactedMessage,
-    redactedData ? JSON.parse(redactedData) : undefined
-  );
+/**
+ * Validates Shopify shop domain format
+ */
+export function validateShopDomain(shop: string): boolean {
+  if (!shop || typeof shop !== "string") {
+    return false;
+  }
+
+  // Basic validation for .myshopify.com domains
+  const shopifyDomainRegex = /^[a-zA-Z0-9][a-zA-Z0-9\-]*\.myshopify\.com$/;
+  return shopifyDomainRegex.test(shop);
+}
+
+/**
+ * Sanitizes shop domain for database storage
+ */
+export function sanitizeShopDomain(shop: string): string {
+  return shop.toLowerCase().trim();
 }
