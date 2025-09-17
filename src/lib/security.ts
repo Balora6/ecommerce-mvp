@@ -23,7 +23,7 @@ export function redactSecrets(
   }
 
   if (typeof obj === "string") {
-    return "[REDACTED]";
+    return "[SEALED]";
   }
 
   if (Array.isArray(obj)) {
@@ -39,7 +39,7 @@ export function redactSecrets(
       );
 
       redacted[key] = isSensitive
-        ? "[REDACTED]"
+        ? "[SEALED]"
         : redactSecrets(value, sensitiveKeys);
     }
     return redacted;
@@ -76,7 +76,6 @@ export function validateShopDomain(shop: string): boolean {
     return false;
   }
 
-  // Basic validation for .myshopify.com domains
   const shopifyDomainRegex = /^[a-zA-Z0-9][a-zA-Z0-9\-]*\.myshopify\.com$/;
   return shopifyDomainRegex.test(shop);
 }

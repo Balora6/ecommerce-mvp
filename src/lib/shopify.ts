@@ -12,7 +12,6 @@ export class ShopifyClient {
   }
 
   private getBaseUrl(): string {
-    // Handle both cases: shop name only or full domain
     const domain = this.shopDomain.includes(".myshopify.com")
       ? this.shopDomain
       : `${this.shopDomain}.myshopify.com`;
@@ -58,7 +57,6 @@ export class ShopifyClient {
 
       return response.data.orders;
     } catch (error) {
-      // Check if it's the protected customer data error
       const errorDetails = {
         error: error instanceof Error ? error.message : String(error),
         shopDomain: this.shopDomain,
@@ -70,7 +68,6 @@ export class ShopifyClient {
 
       safeLogger.error("Error fetching orders from Shopify", errorDetails);
 
-      // Handle specific Shopify API errors
       const status = (error as any)?.response?.status;
       const errorMessage = (error as any)?.response?.data?.errors;
 

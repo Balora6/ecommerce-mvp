@@ -52,11 +52,11 @@ describe("Metrics Aggregator", () => {
         from: "2024-01-01",
         to: "2024-01-31",
         ordersCount: 3,
-        grossRevenue: 325.5, // 100 + 150 + 75.5
+        grossRevenue: 325.5, 
         currency: "USD",
-        avgOrderValue: 108.5, // 325.5 / 3
+        avgOrderValue: 108.5, 
         refundedAmount: 20.0,
-        netRevenue: 305.5, // 325.5 - 20.0
+        netRevenue: 305.5, 
       });
     });
 
@@ -107,8 +107,8 @@ describe("Metrics Aggregator", () => {
         grossRevenue: 200.0,
         currency: "USD",
         avgOrderValue: 200.0,
-        refundedAmount: 85.0, // 50 + 25 + 10
-        netRevenue: 115.0, // 200 - 85
+        refundedAmount: 85.0, 
+        netRevenue: 115.0, 
       });
     });
 
@@ -131,7 +131,7 @@ describe("Metrics Aggregator", () => {
                 },
                 {
                   amount: "10.00",
-                  kind: "capture", // This should be ignored
+                  kind: "capture", 
                 },
                 {
                   amount: "5.00",
@@ -153,8 +153,8 @@ describe("Metrics Aggregator", () => {
         grossRevenue: 100.0,
         currency: "USD",
         avgOrderValue: 100.0,
-        refundedAmount: 25.0, // Only 20 + 5 (refund transactions)
-        netRevenue: 75.0, // 100 - 25
+        refundedAmount: 25.0, 
+        netRevenue: 75.0, 
       });
     });
 
@@ -167,7 +167,7 @@ describe("Metrics Aggregator", () => {
         to: "2024-01-31",
         ordersCount: 0,
         grossRevenue: 0,
-        currency: "USD", // Default currency when no orders
+        currency: "USD", 
         avgOrderValue: 0,
         refundedAmount: 0,
         netRevenue: 0,
@@ -233,10 +233,10 @@ describe("Metrics Aggregator", () => {
 
       const result = calculateMetrics(mockShopId, mockOrders, mockFrom, mockTo);
 
-      expect(result.grossRevenue).toBe(100.12); // Rounded
-      expect(result.refundedAmount).toBe(33.46); // Rounded
-      expect(result.netRevenue).toBe(66.67); // Rounded
-      expect(result.avgOrderValue).toBe(100.12); // Rounded
+      expect(result.grossRevenue).toBe(100.12); 
+      expect(result.refundedAmount).toBe(33.46); 
+      expect(result.netRevenue).toBe(66.67); 
+      expect(result.avgOrderValue).toBe(100.12); 
     });
 
     it("should use currency from first order", () => {
@@ -251,7 +251,7 @@ describe("Metrics Aggregator", () => {
         {
           id: 2,
           total_price: "200.00",
-          currency: "USD", // Different currency, should be ignored
+          currency: "USD", 
           created_at: "2024-01-20T10:00:00Z",
           financial_status: "paid",
         },

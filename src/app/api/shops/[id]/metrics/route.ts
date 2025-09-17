@@ -19,7 +19,6 @@ export async function GET(
       );
     }
 
-    // Fetch shop from database
     const shop = await prisma.shop.findUnique({
       where: { id: shopId },
     });
@@ -28,11 +27,9 @@ export async function GET(
       return NextResponse.json({ error: "Shop not found" }, { status: 404 });
     }
 
-    // Calculate date range for last 30 days (inclusive of today)
     const to = new Date();
-    const from = subDays(to, 29); // 29 days ago + today = 30 days total
+    const from = subDays(to, 29); 
 
-    // Format dates for Shopify API (ISO 8601)
     const fromISO = from.toISOString();
     const toISO = to.toISOString();
 
@@ -43,16 +40,12 @@ export async function GET(
       to: toISO,
     });
 
-    // Initialize Shopify client
     const shopifyClient = new ShopifyClient(shop.accessToken, shop.shopDomain);
 
-    // Fetch orders from Shopify
     const orders = await shopifyClient.getOrders(fromISO, toISO);
 
-    // Calculate metrics
     const metrics = calculateMetrics(shopId, orders, from, to);
 
-    // Log successful metrics fetch
     await prisma.auditLog.create({
       data: {
         actor: "server",

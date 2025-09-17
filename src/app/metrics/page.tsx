@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { IMetricsResponse } from "@/types/metrics";
 import MetricsTable from "@/components/MetricsTable";
 import { useSearchParams, useRouter } from "next/navigation";
-import { MetricsButton } from "@/components/MetricsButton"; // імпорт нової кнопки
+import { MetricsButton } from "@/components/MetricsButton"; 
 
 export default function MetricsPage() {
   const [metrics, setMetrics] = useState<IMetricsResponse | null>(null);

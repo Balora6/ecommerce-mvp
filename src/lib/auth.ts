@@ -1,8 +1,8 @@
 import { supabaseAdmin } from "./supabase";
-import { CreateShopData } from "@/types/shop";
-import { logSecurely } from "./security";
+import { ICreateShopData } from "@/types/shop";
+import { safeLogger } from "./security";
 
-export async function createShop(shopData: CreateShopData) {
+export async function createShop(shopData: ICreateShopData) {
   try {
     const { data, error } = await supabaseAdmin
       .from("shops")
@@ -11,11 +11,10 @@ export async function createShop(shopData: CreateShopData) {
       .single();
 
     if (error) {
-      logSecurely("Error creating shop", { error: error.message });
+      safeLogger.error("Error creating shop", { error: error.message });
       throw new Error(`Failed to create shop: ${error.message}`);
     }
 
-    // Log successful shop creation
     await logAuditEvent("server", "oauth_success", data.id, {
       shopDomain: shopData.shopDomain,
       apiScope: shopData.apiScope,
@@ -23,7 +22,6 @@ export async function createShop(shopData: CreateShopData) {
 
     return data;
   } catch (error) {
-    // Log failed shop creation
     await logAuditEvent("server", "oauth_failure", null, {
       error: error instanceof Error ? error.message : String(error),
       shopDomain: shopData.shopDomain,
@@ -40,7 +38,7 @@ export async function getShopByDomain(shopDomain: string) {
     .single();
 
   if (error && error.code !== "PGRST116") {
-    logSecurely("Error fetching shop by domain", { error: error.message });
+    safeLogger.error("Error fetching shop by domain", { error: error.message });
     throw new Error(`Failed to fetch shop: ${error.message}`);
   }
 
@@ -63,7 +61,7 @@ export async function logAuditEvent(
       },
     ]);
   } catch (error) {
-    logSecurely("Error logging audit event", { 
+    safeLogger.error("Error logging audit event", { 
       error: error instanceof Error ? error.message : String(error) 
     });
   }

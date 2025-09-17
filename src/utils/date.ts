@@ -7,7 +7,7 @@ const DUBAI_TIMEZONE = "Asia/Dubai";
 export function getLast30DaysRange(): { from: Date; to: Date } {
   const now = new Date();
   const to = endOfDay(now);
-  const from = startOfDay(subDays(now, 29)); // 29 days ago + today = 30 days inclusive
+  const from = startOfDay(subDays(now, 29));
 
   return { from, to };
 }

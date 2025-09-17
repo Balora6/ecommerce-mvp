@@ -6,9 +6,6 @@ import { NextRequest } from "next/server";
 import { calculateMetrics } from "@/lib/metrics";
 import { IShopifyOrder } from "@/types/metrics";
 
-// This test focuses on testing the metrics calculation and API response structure
-// without the complexity of mocking all Next.js and external dependencies
-
 describe("/api/shops/[id]/metrics API Route", () => {
   describe("Response Structure and Types", () => {
     it("should return correct response structure and types when calculateMetrics is called", () => {
@@ -47,7 +44,6 @@ describe("/api/shops/[id]/metrics API Route", () => {
 
       const result = calculateMetrics(shopId, mockOrders, from, to);
 
-      // Verify response structure - all required keys present
       expect(result).toHaveProperty("shopId");
       expect(result).toHaveProperty("from");
       expect(result).toHaveProperty("to");
@@ -58,7 +54,6 @@ describe("/api/shops/[id]/metrics API Route", () => {
       expect(result).toHaveProperty("refundedAmount");
       expect(result).toHaveProperty("netRevenue");
 
-      // Verify data types
       expect(typeof result.shopId).toBe("string");
       expect(typeof result.from).toBe("string");
       expect(typeof result.to).toBe("string");
@@ -69,14 +64,13 @@ describe("/api/shops/[id]/metrics API Route", () => {
       expect(typeof result.refundedAmount).toBe("number");
       expect(typeof result.netRevenue).toBe("number");
 
-      // Verify calculated values
       expect(result.shopId).toBe(shopId);
       expect(result.ordersCount).toBe(2);
-      expect(result.grossRevenue).toBe(250.0); // 100 + 150
+      expect(result.grossRevenue).toBe(250.0); 
       expect(result.currency).toBe("USD");
-      expect(result.avgOrderValue).toBe(125.0); // 250 / 2
+      expect(result.avgOrderValue).toBe(125.0); 
       expect(result.refundedAmount).toBe(20.0);
-      expect(result.netRevenue).toBe(230.0); // 250 - 20
+      expect(result.netRevenue).toBe(230.0); 
     });
 
     it("should return zeros with correct shape when no orders are provided", () => {
@@ -86,7 +80,6 @@ describe("/api/shops/[id]/metrics API Route", () => {
 
       const result = calculateMetrics(shopId, [], from, to);
 
-      // Verify response structure
       expect(result).toHaveProperty("shopId");
       expect(result).toHaveProperty("from");
       expect(result).toHaveProperty("to");
@@ -97,7 +90,6 @@ describe("/api/shops/[id]/metrics API Route", () => {
       expect(result).toHaveProperty("refundedAmount");
       expect(result).toHaveProperty("netRevenue");
 
-      // Verify zero values
       expect(result.shopId).toBe(shopId);
       expect(result.ordersCount).toBe(0);
       expect(result.grossRevenue).toBe(0);
@@ -134,7 +126,7 @@ describe("/api/shops/[id]/metrics API Route", () => {
                 },
                 {
                   amount: "25.00",
-                  kind: "capture", // Should be ignored
+                  kind: "capture", 
                 },
               ],
             },
@@ -146,8 +138,8 @@ describe("/api/shops/[id]/metrics API Route", () => {
 
       expect(result.ordersCount).toBe(1);
       expect(result.grossRevenue).toBe(500.0);
-      expect(result.refundedAmount).toBe(150.0); // Only refund transactions: 100 + 50
-      expect(result.netRevenue).toBe(350.0); // 500 - 150
+      expect(result.refundedAmount).toBe(150.0); 
+      expect(result.netRevenue).toBe(350.0); 
       expect(result.avgOrderValue).toBe(500.0);
     });
 
@@ -207,11 +199,11 @@ describe("/api/shops/[id]/metrics API Route", () => {
 
       const result = calculateMetrics(shopId, mockOrders, from, to);
 
-      // Check that values are properly rounded to 2 decimal places
-      expect(result.grossRevenue).toBe(100.0); // 33.333 + 66.666 = 99.999 → 100.00
-      expect(result.avgOrderValue).toBe(50.0); // 100.0 / 2 = 50.00
-      expect(Number.isInteger(result.grossRevenue * 100)).toBe(true); // Should be rounded to 2 decimal places
-      expect(Number.isInteger(result.avgOrderValue * 100)).toBe(true); // Should be rounded to 2 decimal places
+
+      expect(result.grossRevenue).toBe(100.0); 
+      expect(result.avgOrderValue).toBe(50.0); 
+      expect(Number.isInteger(result.grossRevenue * 100)).toBe(true); 
+      expect(Number.isInteger(result.avgOrderValue * 100)).toBe(true); 
     });
   });
 });

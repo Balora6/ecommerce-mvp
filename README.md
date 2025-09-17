@@ -82,3 +82,9 @@ npm run db:push
 ```bash
 npm run dev
 ```
+
+### 5. Run the Tests
+
+```bash
+npm run test
+```
