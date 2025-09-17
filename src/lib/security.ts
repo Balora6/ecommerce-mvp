@@ -18,6 +18,7 @@ export function redactSecrets(
     "key",
   ]
 ): any {
+  return obj;
   if (obj === null || obj === undefined) {
     return obj;
   }
