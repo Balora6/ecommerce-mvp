@@ -93,16 +93,30 @@ export function sanitizeShopDomain(shop: string): string {
 export function getValidatedAppUrl(): string {
   const appUrl = process.env.APP_URL || "http://localhost:3000";
 
+  // Debug logging
+  console.log("[DEBUG] getValidatedAppUrl called with:", {
+    APP_URL: process.env.APP_URL,
+    NODE_ENV: process.env.NODE_ENV,
+    appUrl,
+    hasProtocol: appUrl.startsWith("http://") || appUrl.startsWith("https://"),
+    isVercel: appUrl.includes("vercel.app"),
+  });
+
   // If URL already has protocol, return as is
   if (appUrl.startsWith("http://") || appUrl.startsWith("https://")) {
+    console.log("[DEBUG] URL already has protocol, returning:", appUrl);
     return appUrl;
   }
 
   // For production environments (Vercel), default to https
   if (process.env.NODE_ENV === "production" || appUrl.includes("vercel.app")) {
-    return `https://${appUrl}`;
+    const result = `https://${appUrl}`;
+    console.log("[DEBUG] Adding https protocol, returning:", result);
+    return result;
   }
 
   // For development, default to http
-  return `http://${appUrl}`;
+  const result = `http://${appUrl}`;
+  console.log("[DEBUG] Adding http protocol, returning:", result);
+  return result;
 }

@@ -30,9 +30,9 @@ export async function GET(request: NextRequest) {
         hasState: !!state,
         hasHmac: !!hmac,
       });
-      return NextResponse.redirect(
-        `${getValidatedAppUrl()}?error=missing_params`
-      );
+      const redirectUrl = `${getValidatedAppUrl()}?error=missing_params`;
+      console.log("[DEBUG] Missing params redirect to:", redirectUrl);
+      return NextResponse.redirect(redirectUrl);
     }
 
     if (!validateShopDomain(shop)) {
@@ -44,9 +44,9 @@ export async function GET(request: NextRequest) {
         },
       });
       safeLogger.error("OAuth callback invalid shop domain", { shop });
-      return NextResponse.redirect(
-        `${getValidatedAppUrl()}?error=invalid_shop`
-      );
+      const redirectUrl = `${getValidatedAppUrl()}?error=invalid_shop`;
+      console.log("[DEBUG] Invalid shop redirect to:", redirectUrl);
+      return NextResponse.redirect(redirectUrl);
     }
 
     const sanitizedShop = sanitizeShopDomain(shop);
@@ -81,9 +81,9 @@ export async function GET(request: NextRequest) {
           meta: { error: "HMAC verification failed", shop },
         },
       });
-      return NextResponse.redirect(
-        `${getValidatedAppUrl()}?error=invalid_hmac`
-      );
+      const redirectUrl = `${getValidatedAppUrl()}?error=invalid_hmac`;
+      console.log("[DEBUG] Invalid HMAC redirect to:", redirectUrl);
+      return NextResponse.redirect(redirectUrl);
     }
 
     const tokenResponse = await fetch(
@@ -109,9 +109,9 @@ export async function GET(request: NextRequest) {
           meta: { error: "Token exchange failed", shop },
         },
       });
-      return NextResponse.redirect(
-        `${getValidatedAppUrl()}?error=token_exchange_failed`
-      );
+      const redirectUrl = `${getValidatedAppUrl()}?error=token_exchange_failed`;
+      console.log("[DEBUG] Token exchange failed redirect to:", redirectUrl);
+      return NextResponse.redirect(redirectUrl);
     }
 
     const tokenData = await tokenResponse.json();
@@ -145,11 +145,11 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.redirect(
-      `${getValidatedAppUrl()}/metrics?connected=true&shop=${encodeURIComponent(
-        sanitizedShop
-      )}&shopId=${shopRecord.id}`
-    );
+    const redirectUrl = `${getValidatedAppUrl()}/metrics?connected=true&shop=${encodeURIComponent(
+      sanitizedShop
+    )}&shopId=${shopRecord.id}`;
+    console.log("[DEBUG] Success redirect to:", redirectUrl);
+    return NextResponse.redirect(redirectUrl);
   } catch (error) {
     safeLogger.error("OAuth callback error", {
       error: error instanceof Error ? error.message : "Unknown error",
@@ -163,8 +163,8 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.redirect(
-      `${getValidatedAppUrl()}?error=internal_error`
-    );
+    const redirectUrl = `${getValidatedAppUrl()}?error=internal_error`;
+    console.log("[DEBUG] Redirecting to:", redirectUrl);
+    return NextResponse.redirect(redirectUrl);
   }
 }
