@@ -11,7 +11,10 @@ export default function HomePage() {
 
   const handleConnect = () => {
     setShopConnected(true);
-    window.location.href = "/api/auth/shopify?shop=brokeragetets.myshopify.com";
+    const shopDomain =
+      process.env.NEXT_PUBLIC_SHOPIFY_SHOP_DOMAIN ||
+      "brokeragetets.myshopify.com";
+    window.location.href = `/api/auth/shopify?shop=${shopDomain}`;
   };
 
   return (
