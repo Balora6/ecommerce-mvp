@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Shop {
-  id          String   @id @default(cuid())
+  id          String   @id @default(uuid())
   shopDomain  String   @unique @map("shop_domain")
   accessToken String   @map("access_token")
   apiScope    String   @map("api_scope")
@@ -21,7 +21,7 @@ model Shop {
 }
 
 model AuditLog {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   actor     String
   action    String
   shopId    String?  @map("shop_id")

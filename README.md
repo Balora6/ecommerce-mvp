@@ -1,102 +1,78 @@
-# DTC Ecommerce Brokerage MVP
+# Shopify OAuth Integration MVP
 
-A small but real slice of MVP that proves integration with Shopify, secure data persistence, clean API for metrics, and production standards.
+A minimal Next.js application that demonstrates Shopify OAuth integration with Supabase PostgreSQL backend.
 
-## Frontend vs Backend Separation
+# Setup Instructions
 
-### Frontend (Client-side)
-
-- **Location**: `src/app/` (pages), `src/components/`
-- **Purpose**: User interface, OAuth flow initiation, metrics display
-- **Technologies**: React, Next.js App Router, Tailwind CSS
-- **Key Components**:
-  - Connect Shopify button
-  - Metrics display table
-  - Error boundaries
-
-### Backend (Server-side)
-
-- **Location**: `src/app/api/` (API routes), `src/lib/` (utilities)
-- **Purpose**: API endpoints, data processing, external integrations
-- **Technologies**: Next.js API routes, Supabase, Shopify Admin API
-- **Key Features**:
-  - Shopify OAuth callback handling
-  - Metrics aggregation from Shopify
-  - Database operations
-  - Security utilities
-
-### Shared Code
-
-- **Location**: `src/lib/`, `src/types/`, `src/utils/`
-- **Purpose**: Business logic, type definitions, utilities used by both frontend and backend
-
-## Setup Instructions
-
-1. **Clone the repository**
-2. **Install dependencies**: `npm install`
-3. **Create environment file**:
-   ```bash
-   cp env.example .env
-   ```
-4. **Fill in your environment variables** (see Environment Variables section below)
-5. **Set up Supabase database**: `npm run db:push`
-6. **Run development server**: `npm run dev`
-
-## Environment Variables
-
-### Required Variables:
-
-1. **Supabase**:
-
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `SUPABASE_SERVICE_ROLE_KEY` - Optional (will fallback to anon key if not defined)
-
-2. **Shopify**:
-
-   - `SHOPIFY_APP_KEY`
-   - `SHOPIFY_APP_SECRET`
-   - `SHOPIFY_SCOPES` - Already set to required scopes
-
-3. **Database**:
-   - `DATABASE_URL` - Get from Supabase
-
-### Quick Start:
+## Install dependencies
 
 ```bash
-# Copy the example file
-cp env.example .env
-
-# Edit .env with your values
+npm install
 ```
 
-## API Endpoints
+### 2. Environment Variables Setup
 
-- `GET /api/auth/shopify/callback` - Shopify OAuth callback
-- `GET /api/shops/[id]/metrics` - Get shop metrics for last 30 days
+```bash
+cp env.example .env
+```
 
-## Testing
+Fill `.env.local` with the following values:
 
-Run tests: `npm test`
+#### Database (Supabase PostgreSQL)
 
-## Decisions Made
+```env
+DATABASE_URL="postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres"
+```
 
-- Using Next.js App Router for modern React patterns
-- Prisma for database schema management
-- Supabase for PostgreSQL, auth, and real-time features
-- Jest for testing with React Testing Library
-- Tailwind CSS for minimal styling (function over form)
-- Dubai timezone (UTC+4) for date calculations
+**How to get DATABASE_URL:**
 
-## Production Hardening
+1. Go to [supabase.com](https://supabase.com)
+2. Create a new project or use an existing one
+3. Go to Settings → Database
+4. Copy the Connection string (URI)
 
-For production deployment:
+#### Supabase Configuration
 
-- Implement proper error logging and monitoring
-- Add rate limiting and request validation
-- Use environment-specific configurations
-- Implement proper secret rotation
-- Add comprehensive audit logging
-- Set up automated backups and disaster recovery
-- Implement proper CORS and security headers
-- Add API versioning and deprecation strategies
+```env
+NEXT_PUBLIC_SUPABASE_URL="https://[YOUR-PROJECT-REF].supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="[YOUR-ANON-KEY]"
+SUPABASE_SERVICE_ROLE_KEY="[YOUR-SERVICE-ROLE-KEY]"
+```
+
+**How to get Supabase keys:**
+
+1. In your Supabase project, go to Settings → API
+2. Copy Project URL for `NEXT_PUBLIC_SUPABASE_URL`
+3. Copy anon public key for `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+4. Copy service_role key for `SUPABASE_SERVICE_ROLE_KEY`
+
+#### Shopify App Configuration
+
+```env
+SHOPIFY_CLIENT_ID="[YOUR-SHOPIFY-CLIENT-ID]"
+SHOPIFY_CLIENT_SECRET="[YOUR-SHOPIFY-CLIENT-SECRET]"
+```
+
+**How to get Shopify keys:**
+
+1. Go to [partners.shopify.com](https://partners.shopify.com)
+2. Sign in or create a Partner account
+3. Create a new app in Partner Dashboard
+4. In App setup, specify:
+   - App URL: `http://localhost:3000` (for development)
+   - Allowed redirection URL(s): `http://localhost:3000/api/auth/shopify/callback`
+5. Copy Client ID and Client Secret
+
+### 3. Database Setup
+
+````bash
+# Generate Prisma client
+npm run db:generate
+
+# Apply database migrations
+npm run db:push]
+
+### 4. Run the Application
+```bash
+npm run dev
+````
