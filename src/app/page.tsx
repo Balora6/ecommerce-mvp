@@ -2,6 +2,8 @@
 
 <<<<<<< HEAD
 import { ConnectButton } from "@/components/ConnectButton";
+<<<<<<< HEAD
+<<<<<<< HEAD
 import MetricsTable from "@/components/MetricsTable";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -40,29 +42,29 @@ export default function HomePage() {
   );
 }
 =======
+=======
+>>>>>>> 4ec2a43 (fix pages)
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-
-interface MetricsResponse {
-  shopId: string;
-  from: string;
-  to: string;
-  ordersCount: number;
-  grossRevenue: number;
-  currency: string;
-  avgOrderValue: number;
-  refundedAmount: number;
-  netRevenue: number;
-}
+import { useSearchParams, useRouter } from "next/navigation";
+=======
+import { useState } from "react";
+>>>>>>> 3bb73ff (Refactor HomePage and MetricsPage to streamline Shopify connection handling and improve user experience)
 
 export default function HomePage() {
+<<<<<<< HEAD
   const [shop, setShop] = useState("");
   const [isConnected, setIsConnected] = useState(false);
+=======
+  const [shopConnected, setShopConnected] = useState(false);
+<<<<<<< HEAD
+  const [shopId, setShopId] = useState("");
+>>>>>>> 4ec2a43 (fix pages)
   const [error, setError] = useState("");
   const [metrics, setMetrics] = useState<MetricsResponse | null>(null);
   const [loadingMetrics, setLoadingMetrics] = useState(false);
   const [shopId, setShopId] = useState("");
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
     const connected = searchParams.get("connected");
@@ -75,12 +77,18 @@ export default function HomePage() {
       setShop(shopParam);
       if (shopIdParam) {
         setShopId(shopIdParam);
+        router.push(`/metrics?shopId=${shopIdParam}`);
       }
     } else if (errorParam) {
       setError(`OAuth error: ${errorParam}`);
     }
   }, [searchParams]);
+=======
+  const [error, setError] = useState("");
 
+>>>>>>> 3bb73ff (Refactor HomePage and MetricsPage to streamline Shopify connection handling and improve user experience)
+
+<<<<<<< HEAD
   const fetchMetrics = async () => {
     if (!shopId) {
       setError("Shop ID not available");
@@ -127,6 +135,8 @@ export default function HomePage() {
     window.location.href = `/api/auth/shopify?shop=${encodeURIComponent(shop)}`;
   };
 
+=======
+>>>>>>> 4ec2a43 (fix pages)
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
@@ -242,8 +252,35 @@ export default function HomePage() {
             Enter your Shopify development store domain to test the connection.
           </p>
         </div>
+<<<<<<< HEAD
       </div>
     </div>
   );
 }
 >>>>>>> d8103e9 (feature: add shopify auth logic and sample ui for it)
+=======
+      )}
+
+      {!shopConnected && (
+        <ConnectButton onConnect={() => setShopConnected(true)} />
+      )}
+
+      {shopConnected && (
+        <div
+          style={{
+            padding: "10px",
+            backgroundColor: "#efe",
+            border: "1px solid #cfc",
+            color: "#363",
+            borderRadius: "4px",
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          Connecting to Shopify...
+        </div>
+      )}
+    </div>
+  );
+}
+>>>>>>> 4ec2a43 (fix pages)

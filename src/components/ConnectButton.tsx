@@ -11,10 +11,14 @@ export function ConnectButton({ onConnect }: ConnectButtonProps) {
   const handleConnect = () => {
     if (onConnect) onConnect();
 <<<<<<< HEAD
+<<<<<<< HEAD
     window.location.href = "/api/shopify/oauth/start"; 
 =======
     window.location.href = "/api/auth/shopify?shop=brokeragetets.myshopify.com";
 >>>>>>> e0a5cf4 (Implement tests for metrics calculation and hitting metrics API)
+=======
+    window.location.href = "/api/auth/shopify?shop=brokeragetets.myshopify.com";
+>>>>>>> 4ec2a43 (fix pages)
   };
 
   return (

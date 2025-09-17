@@ -9,10 +9,10 @@ const prisma = new PrismaClient();
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const shopId = params.id;
+    const { id: shopId } = await params;
 
     if (!shopId) {
       return NextResponse.json(
@@ -76,9 +76,10 @@ export async function GET(
 
     return NextResponse.json(metrics);
   } catch (error) {
+    const { id: shopId } = await params;
     safeLogger.error("Error fetching metrics", {
       error: error instanceof Error ? error.message : "Unknown error",
-      shopId: params.id,
+      shopId: shopId,
     });
 
     return NextResponse.json(
