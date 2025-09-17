@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ShopifyOrdersResponse, ShopifyOrder } from "@/types/metrics";
+import { IShopifyOrdersResponse, IShopifyOrder } from "@/types/metrics";
 import { safeLogger } from "./security";
 
 export class ShopifyClient {
@@ -29,7 +29,7 @@ export class ShopifyClient {
   async getOrders(
     createdAtMin: string,
     createdAtMax: string
-  ): Promise<ShopifyOrder[]> {
+  ): Promise<IShopifyOrder[]> {
     try {
       const url = `${this.getBaseUrl()}/orders.json`;
       const params = {
@@ -47,7 +47,7 @@ export class ShopifyClient {
         hasAccessToken: !!this.accessToken,
       });
 
-      const response = await axios.get<ShopifyOrdersResponse>(url, {
+      const response = await axios.get<IShopifyOrdersResponse>(url, {
         headers: this.getHeaders(),
         params,
       });

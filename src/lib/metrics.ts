@@ -1,13 +1,12 @@
-import { ShopifyOrder } from "@/types/metrics";
-import { MetricsResponse } from "@/types/metrics";
+import { IShopifyOrder, IMetricsResponse } from "@/types/metrics";
 import { formatDateForDisplay } from "@/utils/date";
 
 export function calculateMetrics(
   shopId: string,
-  orders: ShopifyOrder[],
+  orders: IShopifyOrder[],
   from: Date,
   to: Date
-): MetricsResponse {
+): IMetricsResponse {
   const currency = orders.length > 0 ? orders[0].currency : "USD";
 
   const grossRevenue = orders.reduce((sum, order) => {

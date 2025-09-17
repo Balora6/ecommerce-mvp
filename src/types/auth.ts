@@ -1,9 +1,9 @@
-export interface ShopifyOAuthResponse {
+export interface IShopifyOAuthResponse {
   access_token: string;
   scope: string;
 }
 
-export interface ShopifyShopInfo {
+export interface IShopifyShopInfo {
   shop: {
     domain: string;
     name: string;
