@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { IMetricsResponse } from "@/types/metrics";
 import MetricsTable from "@/components/MetricsTable";
 import { useSearchParams, useRouter } from "next/navigation";
-import { MetricsButton } from "@/components/MetricsButton";
+import { MetricsButton } from "@/components/MetricsButton"; // імпорт нової кнопки
 
 export default function MetricsPage() {
   const [metrics, setMetrics] = useState<IMetricsResponse | null>(null);
@@ -23,15 +23,10 @@ export default function MetricsPage() {
 
     if (connected === "true" && shopParam) {
       setShopConnected(true);
-      if (shopIdParam) {
-        setShopId(shopIdParam);
-        // Remove the router.push to avoid infinite redirects
-        // The shopId is already set from URL params
-      }
+      if (shopIdParam) setShopId(shopIdParam);
     } else if (errorParam) {
       setError(`OAuth error: ${errorParam}`);
     } else if (shopIdParam) {
-      // Handle direct access with shopId
       setShopId(shopIdParam);
       setShopConnected(true);
     }
@@ -58,8 +53,8 @@ export default function MetricsPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
-      <h1 className="text-2xl font-bold mb-6">Shop Metrics</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6 gap-6">
+      <h1 className="text-3xl font-bold text-gray-800">Shop Metrics</h1>
 
       {!metrics && shopId && <MetricsButton onClick={fetchMetrics} />}
 
