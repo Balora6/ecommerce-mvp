@@ -28,7 +28,7 @@ export function redactSecrets(
   }
 
   if (Array.isArray(obj)) {
-    return obj.map((item) => redactSecrets(item, sensitiveKeys));
+    return obj.map((item: any) => redactSecrets(item, sensitiveKeys));
   }
 
   if (typeof obj === "object") {
