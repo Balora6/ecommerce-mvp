@@ -1,13 +1,21 @@
 "use client";
 
 import { ConnectButton } from "@/components/ConnectButton";
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
 function HomePageContent() {
   const [shopConnected, setShopConnected] = useState(false);
   const [error, setError] = useState("");
   const searchParams = useSearchParams();
+
+  // Reset shopConnected state when user returns from metrics page
+  useEffect(() => {
+    const connected = searchParams.get("connected");
+    if (connected === "true") {
+      setShopConnected(false);
+    }
+  }, [searchParams]);
 
   const handleConnect = () => {
     setShopConnected(true);

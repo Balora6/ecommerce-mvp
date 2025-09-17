@@ -2,6 +2,9 @@
 
 A minimal Next.js application that demonstrates Shopify OAuth integration with Supabase PostgreSQL backend.
 
+## 🌐 Production URL (Vercel)
+👉 [https://ecommerce-mvp-nu.vercel.app/](https://ecommerce-mvp-nu.vercel.app/)
+
 # Setup Instructions
 
 ## Install dependencies
