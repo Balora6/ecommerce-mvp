@@ -1,4 +1,4 @@
-export interface MetricsResponse {
+export interface IMetricsResponse {
   shopId: string;
   from: string;
   to: string;
@@ -10,7 +10,7 @@ export interface MetricsResponse {
   netRevenue: number;
 }
 
-export interface ShopifyOrder {
+export interface IShopifyOrder {
   id: number;
   total_price: string;
   currency: string;
@@ -26,6 +26,6 @@ export interface ShopifyOrder {
   }>;
 }
 
-export interface ShopifyOrdersResponse {
-  orders: ShopifyOrder[];
+export interface IShopifyOrdersResponse {
+  orders: IShopifyOrder[];
 }
