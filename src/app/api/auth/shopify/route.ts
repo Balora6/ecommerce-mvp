@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const shopifyClientId = process.env.SHOPIFY_CLIENT_ID;
     const shopifyScopes =
       process.env.SHOPIFY_SCOPES || "read_orders,read_products,read_customers";
-    const vercelUrl = process.env.VERCEL_URL || "http://localhost:3000";
+    const vercelUrl = process.env.APP_URL || "http://localhost:3000";
 
     if (!shopifyClientId) {
       return NextResponse.json(

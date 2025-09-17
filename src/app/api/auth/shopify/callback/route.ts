@@ -30,9 +30,7 @@ export async function GET(request: NextRequest) {
         hasHmac: !!hmac,
       });
       return NextResponse.redirect(
-        `${
-          process.env.VERCEL_URL || "http://localhost:3000"
-        }?error=missing_params`
+        `${process.env.APP_URL || "http://localhost:3000"}?error=missing_params`
       );
     }
 
@@ -46,9 +44,7 @@ export async function GET(request: NextRequest) {
       });
       safeLogger.error("OAuth callback invalid shop domain", { shop });
       return NextResponse.redirect(
-        `${
-          process.env.VERCEL_URL || "http://localhost:3000"
-        }?error=invalid_shop`
+        `${process.env.APP_URL || "http://localhost:3000"}?error=invalid_shop`
       );
     }
 
@@ -85,9 +81,7 @@ export async function GET(request: NextRequest) {
         },
       });
       return NextResponse.redirect(
-        `${
-          process.env.VERCEL_URL || "http://localhost:3000"
-        }?error=invalid_hmac`
+        `${process.env.APP_URL || "http://localhost:3000"}?error=invalid_hmac`
       );
     }
 
@@ -116,7 +110,7 @@ export async function GET(request: NextRequest) {
       });
       return NextResponse.redirect(
         `${
-          process.env.VERCEL_URL || "http://localhost:3000"
+          process.env.APP_URL || "http://localhost:3000"
         }?error=token_exchange_failed`
       );
     }
@@ -154,7 +148,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.redirect(
       `${
-        process.env.VERCEL_URL || "http://localhost:3000"
+        process.env.APP_URL || "http://localhost:3000"
       }/metrics?connected=true&shop=${encodeURIComponent(
         sanitizedShop
       )}&shopId=${shopRecord.id}`
@@ -173,9 +167,7 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.redirect(
-      `${
-        process.env.VERCEL_URL || "http://localhost:3000"
-      }?error=internal_error`
+      `${process.env.APP_URL || "http://localhost:3000"}?error=internal_error`
     );
   }
 }
