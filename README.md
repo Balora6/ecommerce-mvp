@@ -65,14 +65,20 @@ SHOPIFY_CLIENT_SECRET="[YOUR-SHOPIFY-CLIENT-SECRET]"
 
 ### 3. Database Setup
 
-````bash
 # Generate Prisma client
+
+```bash
 npm run db:generate
+```
 
 # Apply database migrations
-npm run db:push]
+
+```bash
+npm run db:push
+```
 
 ### 4. Run the Application
+
 ```bash
 npm run dev
-````
+```

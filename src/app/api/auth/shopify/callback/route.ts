@@ -157,7 +157,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(
       `${
         process.env.VERCEL_URL || "http://localhost:3000"
-      }?connected=true&shop=${encodeURIComponent(sanitizedShop)}`
+      }?connected=true&shop=${encodeURIComponent(sanitizedShop)}&shopId=${shopRecord.id}`
     );
   } catch (error) {
     safeLogger.error("OAuth callback error", {
