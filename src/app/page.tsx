@@ -3,24 +3,70 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
+interface MetricsResponse {
+  shopId: string;
+  from: string;
+  to: string;
+  ordersCount: number;
+  grossRevenue: number;
+  currency: string;
+  avgOrderValue: number;
+  refundedAmount: number;
+  netRevenue: number;
+}
+
 export default function HomePage() {
   const [shop, setShop] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState("");
+  const [metrics, setMetrics] = useState<MetricsResponse | null>(null);
+  const [loadingMetrics, setLoadingMetrics] = useState(false);
+  const [shopId, setShopId] = useState("");
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const connected = searchParams.get("connected");
     const shopParam = searchParams.get("shop");
     const errorParam = searchParams.get("error");
+    const shopIdParam = searchParams.get("shopId");
 
     if (connected === "true" && shopParam) {
       setIsConnected(true);
       setShop(shopParam);
+      if (shopIdParam) {
+        setShopId(shopIdParam);
+      }
     } else if (errorParam) {
       setError(`OAuth error: ${errorParam}`);
     }
   }, [searchParams]);
+
+  const fetchMetrics = async () => {
+    if (!shopId) {
+      setError("Shop ID not available");
+      return;
+    }
+
+    setLoadingMetrics(true);
+    setError("");
+
+    try {
+      const response = await fetch(`/api/shops/${shopId}/metrics`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setMetrics(data);
+    } catch (err) {
+      setError(
+        `Failed to fetch metrics: ${
+          err instanceof Error ? err.message : "Unknown error"
+        }`
+      );
+    } finally {
+      setLoadingMetrics(false);
+    }
+  };
 
   const handleConnect = () => {
     if (!shop.trim()) {
@@ -86,20 +132,56 @@ export default function HomePage() {
               ✅ Successfully connected to {shop}
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 mb-4">
               <p className="text-sm text-gray-600">
                 <strong>Shop:</strong> {shop}
               </p>
               <p className="text-sm text-gray-600">
                 <strong>Status:</strong> Connected
               </p>
+              {shopId && (
+                <p className="text-sm text-gray-600">
+                  <strong>Shop ID:</strong> {shopId}
+                </p>
+              )}
             </div>
+
+            <button
+              onClick={fetchMetrics}
+              disabled={loadingMetrics}
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loadingMetrics
+                ? "Loading Metrics..."
+                : "Fetch Metrics (Last 30 Days)"}
+            </button>
+
+            {error && (
+              <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                {error}
+              </div>
+            )}
+
+            {metrics && (
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                  Metrics (Last 30 Days)
+                </h3>
+                <div className="bg-gray-50 p-4 rounded-md">
+                  <pre className="text-sm text-gray-800 whitespace-pre-wrap overflow-auto">
+                    {JSON.stringify(metrics, null, 2)}
+                  </pre>
+                </div>
+              </div>
+            )}
 
             <button
               onClick={() => {
                 setIsConnected(false);
                 setShop("");
+                setShopId("");
                 setError("");
+                setMetrics(null);
                 // Clear URL parameters
                 window.history.replaceState(
                   {},
