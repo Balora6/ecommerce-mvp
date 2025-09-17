@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { ShopifyClient } from "@/lib/shopify";
 import { calculateMetrics } from "@/lib/metrics";
 import { safeLogger } from "@/lib/security";
 import { subDays } from "date-fns";
-
-const prisma = new PrismaClient();
 
 export async function GET(
   request: NextRequest,
