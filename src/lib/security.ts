@@ -86,3 +86,23 @@ export function validateShopDomain(shop: string): boolean {
 export function sanitizeShopDomain(shop: string): string {
   return shop.toLowerCase().trim();
 }
+
+/**
+ * Validates and normalizes app URL to ensure it has proper protocol
+ */
+export function getValidatedAppUrl(): string {
+  const appUrl = process.env.APP_URL || "http://localhost:3000";
+
+  // If URL already has protocol, return as is
+  if (appUrl.startsWith("http://") || appUrl.startsWith("https://")) {
+    return appUrl;
+  }
+
+  // For production environments (Vercel), default to https
+  if (process.env.NODE_ENV === "production" || appUrl.includes("vercel.app")) {
+    return `https://${appUrl}`;
+  }
+
+  // For development, default to http
+  return `http://${appUrl}`;
+}
