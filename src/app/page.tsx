@@ -7,11 +7,29 @@ import { useSearchParams } from "next/navigation";
 export default function HomePage() {
   const [shopConnected, setShopConnected] = useState(false);
   const [error, setError] = useState("");
+  const [shopDomain, setShopDomain] = useState("");
   const searchParams = useSearchParams();
 
   const handleConnect = () => {
+    if (!shopDomain.trim()) {
+      setError("Please enter your Shopify store domain");
+      return;
+    }
+
+    // Validate shop domain format
+    const domain = shopDomain.trim().toLowerCase();
+    if (!domain.includes(".myshopify.com")) {
+      setError(
+        "Please enter a valid Shopify domain (e.g., your-store.myshopify.com)"
+      );
+      return;
+    }
+
     setShopConnected(true);
-    window.location.href = "/api/auth/shopify?shop=brokeragetets.myshopify.com";
+    setError("");
+    window.location.href = `/api/auth/shopify?shop=${encodeURIComponent(
+      domain
+    )}`;
   };
 
   return (
@@ -45,7 +63,30 @@ export default function HomePage() {
       )}
 
       {!searchParams.get("connected") && (
-        <ConnectButton onClick={handleConnect} />
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+          }}
+        >
+          <input
+            type="text"
+            placeholder="your-store.myshopify.com"
+            value={shopDomain}
+            onChange={(e) => setShopDomain(e.target.value)}
+            style={{
+              padding: "12px",
+              border: "1px solid #ddd",
+              borderRadius: "6px",
+              fontSize: "16px",
+              width: "100%",
+              boxSizing: "border-box",
+            }}
+          />
+          <ConnectButton onClick={handleConnect} />
+        </div>
       )}
 
       {shopConnected && (

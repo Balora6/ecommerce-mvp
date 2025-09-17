@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { IMetricsResponse } from "@/types/metrics";
 import MetricsTable from "@/components/MetricsTable";
 import { useSearchParams, useRouter } from "next/navigation";
+import { MetricsButton } from "@/components/MetricsButton";
 
 export default function MetricsPage() {
   const [metrics, setMetrics] = useState<IMetricsResponse | null>(null);
@@ -60,15 +61,7 @@ export default function MetricsPage() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
       <h1 className="text-2xl font-bold mb-6">Shop Metrics</h1>
 
-      {!metrics && shopId && (
-        <button
-          onClick={fetchMetrics}
-          disabled={loading}
-          className="bg-blue-600 text-white py-2 px-4 rounded mb-4 disabled:opacity-50"
-        >
-          {loading ? "Loading Metrics..." : "Get Shop Metrics"}
-        </button>
-      )}
+      {!metrics && shopId && <MetricsButton onClick={fetchMetrics} />}
 
       {!shopId && !error && (
         <div className="text-gray-600 mb-4">
