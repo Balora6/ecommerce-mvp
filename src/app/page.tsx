@@ -1,10 +1,10 @@
 "use client";
 
 import { ConnectButton } from "@/components/ConnectButton";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function HomePage() {
+function HomePageContent() {
   const [shopConnected, setShopConnected] = useState(false);
   const [error, setError] = useState("");
   const searchParams = useSearchParams();
@@ -28,14 +28,25 @@ export default function HomePage() {
       )}
 
       {!searchParams.get("connected") && (
-        <ConnectButton onClick={handleConnect} />
-      )}
-
-      {shopConnected && (
-        <div className="w-full text-center px-4 py-3 bg-green-100 border border-green-300 text-green-700 rounded-md">
-          Connecting to Shopify...
-        </div>
+        <ConnectButton onClick={handleConnect} loading={shopConnected} />
       )}
     </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6 gap-6">
+          <h1 className="text-3xl font-bold text-gray-800">
+            Shopify Dashboard
+          </h1>
+          <div className="text-gray-600">Loading...</div>
+        </div>
+      }
+    >
+      <HomePageContent />
+    </Suspense>
   );
 }
