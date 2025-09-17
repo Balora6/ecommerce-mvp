@@ -1,10 +1,10 @@
 "use client";
 
 import { ConnectButton } from "@/components/ConnectButton";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function HomePage() {
+function HomePageContent() {
   const [shopConnected, setShopConnected] = useState(false);
   const [error, setError] = useState("");
   const searchParams = useSearchParams();
@@ -37,5 +37,19 @@ export default function HomePage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
+      <HomePageContent />
+    </Suspense>
   );
 }

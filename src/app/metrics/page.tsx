@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import { IMetricsResponse } from "@/types/metrics";
 import MetricsTable from "@/components/MetricsTable";
 import { useSearchParams, useRouter } from "next/navigation";
-import { MetricsButton } from "@/components/MetricsButton"; 
+import { MetricsButton } from "@/components/MetricsButton";
 
 function MetricsContent() {
   const [metrics, setMetrics] = useState<IMetricsResponse | null>(null);
@@ -73,7 +73,13 @@ function MetricsContent() {
 
 export default function MetricsPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
       <MetricsContent />
     </Suspense>
   );
