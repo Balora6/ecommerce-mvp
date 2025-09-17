@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { IMetricsResponse } from "@/types/metrics";
 import MetricsTable from "@/components/MetricsTable";
 import { useSearchParams, useRouter } from "next/navigation";
 import { MetricsButton } from "@/components/MetricsButton"; 
 
-export default function MetricsPage() {
+function MetricsContent() {
   const [metrics, setMetrics] = useState<IMetricsResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -68,5 +68,13 @@ export default function MetricsPage() {
 
       {metrics && <MetricsTable metrics={metrics} />}
     </div>
+  );
+}
+
+export default function MetricsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <MetricsContent />
+    </Suspense>
   );
 }
