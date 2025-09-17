@@ -1,4 +1,4 @@
-export interface Shop {
+export interface IShop {
   id: string;
   shopDomain: string;
   accessToken: string;
@@ -7,7 +7,7 @@ export interface Shop {
   updatedAt: Date;
 }
 
-export interface CreateShopData {
+export interface ICreateShopData {
   shopDomain: string;
   accessToken: string;
   apiScope: string;

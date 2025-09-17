@@ -3,7 +3,7 @@
 import React from "react";
 
 type ConnectButtonProps = {
-  onConnect?: () => void;
+  onConnect: () => void;
 };
 
 export function ConnectButton({ onConnect }: ConnectButtonProps) {
